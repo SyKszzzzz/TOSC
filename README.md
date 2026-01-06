@@ -45,7 +45,7 @@ Task-oriented dexterous grasping remains challenging in robotic manipulations of
     More dependencies and  instructions can be found in the [instructions](./thirdparty/README.md).
 
 4. Get MANO asset
-    Get the MANO hand model mano_v1_2.zip from the [MANO website] (https://mano.is.tue.mpg.de/).
+    Get the MANO hand model mano_v1_2.zip from the [MANO website](https://mano.is.tue.mpg.de/).
 
     1) click Download on the top menu, this requires register & login.
     2) on the Download page, navigate to Models & Code section, and click Models & Code.
