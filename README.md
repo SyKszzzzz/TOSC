@@ -37,7 +37,7 @@ Task-oriented dexterous grasping remains challenging in robotic manipulations of
 
     - We use `pytorch1.11` and `cuda11.3`, modify `pre-requirements.txt` to install [other versions](https://pytorch.org/get-started/previous-versions/) of `pytorch`.
 
-3. Install [Isaac Gym](https://developer.nvidia.com/isaac-gym) and install [pointnet2](https://github.com/daveredrum/Pointnet2.ScanNet) by executing the following command (optional for grasp generation and arm motion planning).
+3. Install [Isaac Gym](https://developer.nvidia.com/isaac-gym) and install [pointnet2](https://github.com/daveredrum/Pointnet2.ScanNet) by executing the following command.
 
     ```bash
     pip install git+https://github.com/daveredrum/Pointnet2.ScanNet.git#subdirectory=pointnet2
