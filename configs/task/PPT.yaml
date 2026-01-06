@@ -1,0 +1,56 @@
+# task: pose generation
+name: PPT
+lr: 1e-4
+eval_interval: 1
+eval_visualize: 1
+
+train:
+  # batch_size: 4 #为了调试
+  batch_size: 64
+#  num_workers: 4
+  num_workers: 0
+  num_epochs: 700
+  log_step: 100
+
+test:
+  epoch: null
+  batch_size: 32
+  num_workers: 0
+
+dataset:
+  name: OIShape_partial
+  normalize_x: False
+  normalize_x_trans: False
+  desc: '[OIShape_partial] -- dataset used for grasp pose generation condition on 3D object'
+  modeling_keys: ['allDoFs']
+  num_points: 2048
+  frame_interval_train: 5
+  frame_interval_test: 10
+  device: cuda
+  use_color: False
+  use_normal: False
+  is_downsample: true
+  asset_dir: /home/syks/Scene-Diffuser-obj/data
+  asset_dir_slurm: /home/syks/Scene-Diffuser-obj/data
+  OBJ_CATES: all
+  DATA_MODE: partial
+  INTENT_MODE: ["use", "hold", "liftup", "handover"]
+  DATA_ROOT: /home/syks/Scene-Diffuser-obj/data
+  train_transforms: ['NumpyToTensor']
+  test_transforms: ['NumpyToTensor']
+  transform_cfg: {}
+  DATA_PRESET:
+    CENTER_IDX: 9
+    USE_CACHE: True
+    N_RESAMPLED_OBJ_POINTS: 2048
+
+visualizer:
+  name: PPTVisualizer
+  # ksample: 64 # sample k case in each case
+  ksample: 20 # sample k case in each case
+  vis_denoising: false # visualize denoising process
+  save_mesh: false
+  ## visualization config used in training
+  visualize: false
+  interval: 1
+  # /home/bingxing2/home/scx7at3/.conda/envs/3d/lib/python3.8/site-packages/oikit

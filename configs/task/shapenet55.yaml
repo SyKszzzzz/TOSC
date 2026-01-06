@@ -1,0 +1,48 @@
+# task: pose generation
+# name: grasp_gen_ur_mano
+name: Shapenet
+lr: 1e-4
+eval_interval: 1
+eval_visualize: 1
+
+train:
+  batch_size: 64
+#  num_workers: 4
+  num_workers: 0
+  num_epochs: 3000
+  log_step: 100
+
+test:
+  epoch: null
+  batch_size: 32
+  num_workers: 0
+
+dataset:
+  name: Shapenet55
+  normalize_x: true
+  normalize_x_trans: true
+  desc: '[MultiDex Mano] -- dataset used for grasp pose generation condition on 3D object'
+  modeling_keys: ['allDoFs']
+  num_points: 2048
+  frame_interval_train: 5
+  frame_interval_test: 10
+  device: cuda
+  use_color: false
+  use_normal: false
+  is_downsample: true
+  asset_dir: /home/syks/dataset/ShapeNet55
+  asset_dir_slurm: /home/syks/dataset/ShapeNet55
+  # asset_dir: /home/wangzan/Data/SceneDiffuser/grasp_and_armmotion/datasets/MultiDex_UR/
+  # asset_dir_slurm: /home/wangzan/Data/SceneDiffuser/grasp_and_armmotion/datasets/MultiDex_UR/
+  train_transforms: ['NumpyToTensor']
+  test_transforms: ['NumpyToTensor']
+  transform_cfg: {}
+
+visualizer:
+  name: GraspGenURVisualizer
+  ksample: 64 # sample k case in each case
+  vis_denoising: false # visualize denoising process
+  save_mesh: false
+  ## visualization config used in training
+  visualize: false
+  interval: 1

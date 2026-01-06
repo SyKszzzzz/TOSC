@@ -1,0 +1,55 @@
+# task: pose generation
+name: Refinenet
+lr: 1e-4
+eval_interval: 1
+eval_visualize: 1
+
+train:
+  # batch_size: 4 #为了调试
+  batch_size: 64
+#  num_workers: 4
+  num_workers: 0
+  num_epochs: 400
+  log_step: 100
+
+test:
+  epoch: null
+  batch_size: 32
+  num_workers: 0
+
+dataset:
+  name: OIShape
+  normalize_x: False
+  normalize_x_trans: False
+  desc: '[OIShape] -- dataset used for grasp pose generation condition on 3D object'
+  modeling_keys: ['allDoFs']
+  num_points: 2048
+  frame_interval_train: 5
+  frame_interval_test: 10
+  device: cuda
+  use_color: False
+  use_normal: False
+  DATA_MODE: intent_f
+  is_downsample: true
+  asset_dir: /home/syks/Scene-Diffuser-obj/data
+  asset_dir_slurm: /home/syks/Scene-Diffuser-obj/data
+  OBJ_CATES: all
+  INTENT_MODE: ["use", "hold", "liftup"]
+  DATA_ROOT: /home/syks/Scene-Diffuser-obj/data
+  train_transforms: ['NumpyToTensor']
+  test_transforms: ['NumpyToTensor']
+  transform_cfg: {}
+  DATA_PRESET:
+    CENTER_IDX: 9
+    USE_CACHE: True
+    N_RESAMPLED_OBJ_POINTS: 4096
+
+visualizer:
+  name: AnyDexTOGVisualizer
+  # ksample: 64 # sample k case in each case
+  ksample: 10 # sample k case in each case
+  vis_denoising: false # visualize denoising process
+  save_mesh: false
+  ## visualization config used in training
+  visualize: false
+  interval: 1

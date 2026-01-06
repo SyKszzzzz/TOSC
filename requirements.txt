@@ -1,0 +1,46 @@
+-e git+https://github.com/Silverster98/pytorch_kinematics#egg=pytorch_kinematics
+git+https://github.com/facebookresearch/pytorch3d.git@v0.7.0
+git+https://github.com/otaheri/chamfer_distance.git@d2b524309db114d0f7ce18be6c01b3802cde9791
+git+https://github.com/Silverster98/pointops
+git+https://github.com/nghorbani/human_body_prior
+manotorch@git+https://github.com/lixiny/manotorch.git
+chumpy@git+https://github.com/mattloper/chumpy.git 
+pip install git+https://github.com/oakink/OakInk.git
+pip install "git+https://github.com/openai/CLIP.git@dcba3cb2e2827b402d2701e7e1c7d9fed8a20ef1"
+
+
+numpy==1.23.0
+scipy==1.10.1
+pandas==2.0.3
+h5py==3.11.0
+tqdm==4.62.3
+matplotlib==3.5.1
+seaborn==0.13.2
+open3d==0.18.0
+trimesh==3.12.7
+pyrender==0.1.45
+pyglet==2.0.17
+opencv-python==4.6.0.66
+pillow==10.4.0
+imageio==2.35.1
+plyfile==1.0.3
+smplx==0.1.28
+diffusers==0.32.2
+transformers
+accelerate==1.0.1
+timm==0.4.5
+einops==0.4.1
+tensorboardX==2.6.2.2
+scikit-learn==1.3.2
+hydra-core==1.2.0
+omegaconf==2.2.2
+yacs==0.1.8
+addict==2.4.0
+loguru==0.6.0
+pyyaml==6.0.2
+termcolor==2.4.0
+fire==0.7.0
+pybullet==3.2.6
+urdf_parser_py==0.0.4
+transforms3d==0.4.1
+pyquaternion==0.9.9

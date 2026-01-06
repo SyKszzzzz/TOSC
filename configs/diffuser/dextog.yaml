@@ -1,0 +1,9 @@
+name: DexTOG
+steps: 100
+schedule_cfg:
+  beta: [0.0001, 0.01]
+  beta_schedule: 'linear'
+  s: 0.008
+
+rand_t_type: 'all' # 'half' or 'all'
+loss_type: 'l2' # 'l1' or 'l2'
