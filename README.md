@@ -42,7 +42,7 @@ Task-oriented dexterous grasping remains challenging in robotic manipulations of
     ```bash
     pip install git+https://github.com/daveredrum/Pointnet2.ScanNet.git#subdirectory=pointnet2
     ```
-    More dependencies and  instructions can be found in the [instructions](./thirdparty/README.md).
+    More dependencies and  instructions can be found in the [instructions](./thirdparty/readme.md).
 
 4. Get MANO asset
     Get the MANO hand model mano_v1_2.zip from the [MANO website](https://mano.is.tue.mpg.de/).
