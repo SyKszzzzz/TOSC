@@ -6,7 +6,7 @@ This repository is the official implementation of paper "TOSC: Task-Oriented Sha
 
 Citation:
  ```bash
-@misc{wu2026tosc,
+@article{wu2026tosc,
   title={TOSC: Task-Oriented Shape Completion for Open-World Dexterous Grasp Generation from Partial Point Clouds}, 
   author={Weishang Wu and Yifei Shi and Zhiping Cai},
   journal={arXiv preprint arXiv:2601.05499},
