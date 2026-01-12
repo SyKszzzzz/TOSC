@@ -4,6 +4,16 @@ Weishang Wu, Yifei Shi, Zhiping Cai
 
 This repository is the official implementation of paper "TOSC: Task-Oriented Shape Completion for Open-World Dexterous Grasp Generation from Partial Point Clouds".
 
+Citation:
+ ```bash
+@misc{wu2026tosc,
+  title={TOSC: Task-Oriented Shape Completion for Open-World Dexterous Grasp Generation from Partial Point Clouds}, 
+  author={Weishang Wu and Yifei Shi and Zhiping Cai},
+  journal={arXiv preprint arXiv:2601.05499},
+  year={2026},
+  }
+ ```
+
 We introduce TOSC, a novel framework for open-world dexterous grasp generation from partial point clouds. TOSC enables Task-Oriented Shape Completion, a new paradigm that explicitly conditions geometry reconstruction on the downstream manipulation task. In contrast to prior work, TOSC is intrinsically task-aware, prioritizing the completion of functional contact regions over global geometry to achieve robust grasping under severe occlusion.
 
 <div align=center>
