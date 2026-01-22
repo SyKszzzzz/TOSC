@@ -174,98 +174,6 @@ class OIShape_SV(GraspData):
         alt_j, alt_v, alt_pose, alt_shape, alt_tsl = self.base_dataset.get_hand_over(idx)
         return alt_j, alt_v, alt_pose, alt_shape, alt_tsl
     
-    def get_llm_SV(self, idx):
-        cate_id = self.grasp_list[idx]["cate_id"]      # 物体类型
-        # act_id = self.grasp_list[idx]["action_id"] 
-        # intent_name = self.action_id_to_intent[act_id] # 意图
-        # 'file_path': '/home/syks/Scene-Diffuser-obj/data/OakInk/shape/oakink_shape_v2/trigger_sprayer/O01000/f655758323/s01101/hand_param.pkl'
-        # ins_path : ''/home/syks/Scene-Diffuser-obj/data/OakInk/CapGrasp/captions/v0_1/trigger_sprayer/O01000/f655758323/s01101/'
-        file_path = self.grasp_list[idx]["file_path"]
-        # 加载ins
-        # ----------------------------------------------------------------------------------------------------------------
-        ins_path = file_path.replace('shape/oakink_shape_v2', 'CapGrasp/captions/v0_1')
-        # 统计simple_caption数量
-        ins_path = os.path.dirname(ins_path)
-        all_files = os.listdir(ins_path)
-        simple_caption_files = [f for f in all_files if f.endswith('_word.npy')]
-        num_files = len(simple_caption_files)
-        # print("num_files  is ", num_files)
-        ins_id = np.random.randint(0, num_files)
-
-        ins_disc = np.load(os.path.join(ins_path, str(ins_id)+"_word.npy"))[0]
-        ins_mask_disc = np.load(os.path.join(ins_path, str(ins_id)+"_mask.npy"))[0]
-
-        # ins_disc = np.ones(3)
-        # ins_mask_disc = np.ones(3)
-        # ----------------------------------------------------------------------------------------------------------------
-
-       
-
-        # 下面搞的是加载原始的ins，bert处理后的应该是找到
-        # ----------------------------------------------------------------------------------------------------------------
-        # file_path = self.grasp_list[idx]["file_path"]
-        # ins_path = file_path.replace('shape/oakink_shape_v2', 'CapGrasp/captions/v0_1')
-        # # 统计simple_caption数量
-        # ins_path = os.path.dirname(ins_path)
-        # all_files = os.listdir(ins_path)
-        # simple_caption_files = [f for f in all_files if f.endswith('_simple_caption.json')]
-        # num_files = len(simple_caption_files)
-
-        # ins_id = np.random.randint(0, num_files)
-
-        # ins_json = simple_caption_files[ins_id]
-
-        # with open(os.path.join(ins_path, ins_json), 'r') as f:
-        #     data = json.load(f)
-        # for entry in data:
-        #     if entry.get("from") == "human":
-        #         ins = entry.get("value")
-        # ----------------------------------------------------------------------------------------------------------------
-
-        # 加载物体理解
-        # ----------------------------------------------------------------------------------------------------------------
-        obj_base = "/home/syks/Scene-Diffuser-obj/data/OakInk/SV_llm/obj/"
-        obj_name, _ = self.base_dataset.get_obj_name(idx)
-
-        obj_path = os.path.join(obj_base, obj_name)
-        sv_id = np.random.randint(0, 10)
-
-        obj_id = np.random.randint(0, 10)
-        obj_disc = np.load(os.path.join(obj_path, str(sv_id),  str(obj_id)+"_word.npy"))[0]
-        
-        obj_mask_disc = np.load(os.path.join(obj_path, str(sv_id),  str(obj_id)+"_mask.npy"))[0]
-        # ----------------------------------------------------------------------------------------------------------------
-        return ins_disc, ins_mask_disc, sv_id, obj_disc, obj_mask_disc, ins_path
-        
-        # llm_path = os.path.join(self.data_root, "OakInk","llm")
-        # # ins
-        # # 这里的ins并不固定为52了，因为不同的不一样
-        # task_ins_id = np.random.randint(0, 52)
-
-        # # 指令
-        # ins_disc = np.load(os.path.join(llm_path, "ins_disc", cate_id,  , str(task_ins_id)+"_word.npy"))[0]
-        # ins_mask_disc = np.load(os.path.join(llm_path, "ins_disc", cate_id, intent_name, str(task_ins_id)+"_mask.npy"))[0]
-
-
-        # # task
-        # task_id = np.random.randint(0, 10)
-        # task_disc = np.load(os.path.join(llm_path, "task_part", cate_id, intent_name, str(task_id)+"_word.npy"))[0]
-        # task_mask_disc = np.load(os.path.join(llm_path, "task_part", cate_id, intent_name, str(task_id)+"_mask.npy"))[0]
-
-        
-        # obj  最多10个part，那就pad到10，然后加mask
-        # 对于物体的描述
-        # 对于残缺点云id就是sv_id
-
-        
-
-
-        
-
-        # return ins_disc, ins_mask_disc, task_disc, task_mask_disc, sv_id, obj_disc, obj_mask_disc
-        # task_mask_disc = os.paht.join(llm_path, "ins_disc", cate_id, intent_name, str(task_ins_id)+"_mask.npy")
-
-
     def read_color_info(self, color_info_path):
         color_to_semantic = {}
         with open(color_info_path, 'r') as f:
@@ -288,200 +196,28 @@ class OIShape_SV(GraspData):
         colors = np.round(colors, 3)
         return points, colors
     
-    def get_part_indices(self, colors, color_to_semantic):
-        part_indices = {label: [] for label in color_to_semantic.values()}
-
-        for i, color in enumerate(colors):
-            color_tuple = tuple(color)
-            if color_tuple in color_to_semantic:
-                semantic_label = color_to_semantic[color_tuple]
-                part_indices[semantic_label].append(i)
-
-        return part_indices
-    
-    # def get_sampled_part_indices(self, sampled_indices, part_indices):
-    #     sampled_part_indices = {label: [] for label in part_indices.keys()}
-
-    #     for sampled_idx in sampled_indices:
-    #         for part, indices in part_indices.items():
-    #             if sampled_idx in indices:
-    #                 sampled_part_indices[part].append(sampled_idx)
-    #                 break
-
-    #     return sampled_part_indices
-    def get_sampled_part_indices(self, sampled_indices, part_indices):
-        sampled_part_indices = {label: [] for label in part_indices.keys()}
-
-        # Create a reverse mapping from original indices to sampled indices
-        original_to_sampled = {original_idx: sampled_idx for sampled_idx, original_idx in enumerate(sampled_indices)}
-
-        for part, indices in part_indices.items():
-            for original_idx in indices:
-                if original_idx in original_to_sampled:
-                    sampled_part_indices[part].append(original_to_sampled[original_idx])
-
-        return sampled_part_indices
-    
-    def get_pointcloud_w_part(self, idx):
-        cate_id = self.grasp_list[idx]["cate_id"]      # 物体类型
-        obj_id = self.grasp_list[idx]["obj_id"]        # 物体id
-        act_id = self.grasp_list[idx]["action_id"] 
-        intent_name = self.action_id_to_intent[act_id] # 意图
-        # pc = np.asarray(self.base_dataset.get_obj_pc_path(idx)).astype(np.int32)
-        raw_pc_path, obj_name = self.base_dataset.get_obj_pc_path(idx)  # 带RGB的点云
-
-        print("obj_name is ", obj_name)
-        part_path = os.path.join(self.data_root, "OakInk","shape", "part")
-        obj_part_path = os.path.join(part_path, obj_name)
-
-        L0_path = os.path.join(obj_part_path, "L0")
-        L1_path = os.path.join(obj_part_path, "L1")
-
-        L0_color_info_path = os.path.join(L0_path, "color_info.txt")
-        L0_ply_path = os.path.join(L0_path, "semantic_seg_all.ply")
-        
-        L1_color_info_path = os.path.join(L1_path, "color_info.txt")
-        L1_ply_path = os.path.join(L1_path, "semantic_seg_all.ply")
-
-        # Read point clouds for L0 and L1
-        L0_color_to_semantic = self.read_color_info(L0_color_info_path)
-        L1_color_to_semantic = self.read_color_info(L1_color_info_path)
-        # print("L0_color_to_semantic is ", L0_color_to_semantic)
-        # print("L1_color_to_semantic is ", L1_color_to_semantic)
-
-
-        points, _ = self.read_pointcloud(raw_pc_path)
-        _, L0_colors = self.read_pointcloud(L0_ply_path)
-        # print("points shape is ", points.shape)
-        # print("L0_colors shape is ", L0_colors.shape)
-        # print("L0_colors is ", L0_colors)
-
-        _, L1_colors = self.read_pointcloud(L1_ply_path)
-
-
-        L0_point_indices = self.get_part_indices(L0_colors, L0_color_to_semantic)
-        L1_point_indices = self.get_part_indices(L1_colors, L1_color_to_semantic)
-        # print("L0_point_indices is ", L0_point_indices)
-        # print("L1_point_indices is ", L1_point_indices)
-
-        L0_point_cloud = Pointclouds(points=[torch.tensor(points, dtype=torch.float32)])
-
-        sampled_points, sampled_indices = sample_farthest_points(L0_point_cloud.points_padded(), K=1024)
-
-
-        # print(" sampled_points shape is ", sampled_points.shape)
-        # print(" sampled_indices shape is ", sampled_indices.shape)
-
-
-        sampled_points = sampled_points[0].numpy()
-        sampled_indices = sampled_indices[0].numpy()
-
-         # pc中心化
-        bbox_center = (sampled_points.min(axis=0) + sampled_points.max(axis=0)) / 2
-        centralized_point_cloud = sampled_points - bbox_center
-
-        sampled_L0_part_indices = self.get_sampled_part_indices(sampled_indices, L0_point_indices)
-        sampled_L1_part_indices = self.get_sampled_part_indices(sampled_indices, L1_point_indices)
-
-        sampled_L0_part_indices = self.get_sampled_part_indices(sampled_indices, L0_point_indices)
-        sampled_L1_part_indices = self.get_sampled_part_indices(sampled_indices, L1_point_indices)
-
-        L0_part_mask = np.zeros((3, 4096), dtype=np.float32)
-
-        L1_part_mask = np.zeros((6, 4096), dtype=np.float32)
-
-        L0_index = 0
-        for part_idx, point_indices in sampled_L0_part_indices.items():
-            print(f"part_idx is {part_idx}, len is {len(point_indices)}")
-            for point_idx in point_indices:
-                L0_part_mask[L0_index, point_idx] = 1
-            L0_index = L0_index + 1
-        L1_index = 0
-        for part_idx, point_indices in sampled_L1_part_indices.items():
-            print(f"part_idx is {part_idx}, len is {len(point_indices)}")
-            for point_idx in point_indices:
-                L1_part_mask[L1_index, point_idx] = 1
-            L1_index = L1_index +1
-        
-        # for i in range(L0_index):
-        #     print(f"L0_part_mask[{i}], sum is {sum(L0_part_mask[i])}")
-
-        # for i in range(L1_index):
-        #     print(f"L1_part_mask[{i}], sum is {sum(L1_part_mask[i])}")
-
-        return centralized_point_cloud, L0_part_mask, L1_part_mask
-    
-    def get_pointcloud_w_part_load(self, idx):
-        cate_id = self.grasp_list[idx]["cate_id"]      # 物体类型
-        obj_id = self.grasp_list[idx]["obj_id"]        # 物体id
-        act_id = self.grasp_list[idx]["action_id"] 
-        intent_name = self.action_id_to_intent[act_id] # 意图
-        # pc = np.asarray(self.base_dataset.get_obj_pc_path(idx)).astype(np.int32)
-        raw_pc_path, obj_name = self.base_dataset.get_obj_pc_path(idx)  # 带RGB的点云
-        
-
-        base_path = "/home/syks/Scene-Diffuser-obj/data/OakInk/shape/preprocess"
-        save_path = os.path.join(base_path, obj_name, "preprocess.npz")
-        data = np.load(save_path)
-        centralized_point_cloud = data["centralized_point_cloud"]
-        L0_part_mask = data["L0_part_mask"]
-        L1_part_mask = data["L1_part_mask"]
-
-        return centralized_point_cloud, L0_part_mask, L1_part_mask
-    
 
     def get_pointcloud_SV(self, idx, sv_id):
         cate_id = self.grasp_list[idx]["cate_id"]      # 物体类型
-        
-
         obj_id = self.grasp_list[idx]["obj_id"]        # 物体id
         obj_name, real_flag = self.base_dataset.get_obj_name(idx)
-        # SV_id = np.random.randint(0, 10)
-        # 根据物体id获取物体name
-        # model_align_  这个有问题
-
-
-        # if real_flag:
-        #     pc_path = f"/home/syks/Scene-Diffuser-obj/data/OakInk/render/OakInkObjectsV2/pcd/{obj_name}/align_ds/model_align_{sv_id}.ply"
-        # else:
-        #     pc_path = f"/home/syks/Scene-Diffuser-obj/data/OakInk/render/OakInkVirtualObjectsV2/pcd/{obj_name}/align_ds/model_align_{sv_id}.ply"
-
+      
         if real_flag:
             pc_path = f"/home/syks/Scene-Diffuser-obj/data/OakInk/render/OakInkObjectsV2/pcd/{obj_name}/align_ds/"
         else:
             pc_path = f"/home/syks/Scene-Diffuser-obj/data/OakInk/render/OakInkVirtualObjectsV2/pcd/{obj_name}/align_ds/"
         all_files = os.listdir(pc_path)
         pc_files = [f for f in all_files if f.endswith(f'_{sv_id}.ply')]
-        pc_path = os.path.join(pc_path, pc_files[0])
-
-        # print(f"sv_id is  {sv_id}, the pc_path is {pc_path}")
-        
+        pc_path = os.path.join(pc_path, pc_files[0]) 
         points, _ = self.read_pointcloud(pc_path)
-
         L0_point_cloud = Pointclouds(points=[torch.tensor(points, dtype=torch.float32)])
-
         sampled_points, sampled_indices = sample_farthest_points(L0_point_cloud.points_padded(), K=1024)
-
-
-        # print(" sampled_points shape is ", sampled_points.shape)
-        # print(" sampled_indices shape is ", sampled_indices.shape)
-
-
         sampled_points = sampled_points[0].numpy()
         sampled_indices = sampled_indices[0].numpy()
-
-         # pc中心化
         bbox_center = (sampled_points.min(axis=0) + sampled_points.max(axis=0)) / 2
         centralized_point_cloud = sampled_points - bbox_center
-
         return centralized_point_cloud
-
-
-
-
    
-
-        # 把4096个点云放进来，还有就是mask（最多12个），part无论怎么样，输入到pointnet的输出维度都是一样的
 
     def get_sample_identifier(self, idx):
         cate_id = self.grasp_list[idx]["cate_id"]
@@ -492,8 +228,6 @@ class OIShape_SV(GraspData):
         seq_ts = self.grasp_list[idx]["seq_ts"]
         return (f"{self.name}_{self.data_split}_CATE_{cate_id}"
                 f"_OBJ({obj_id})_INT({intent_name})_SUB({subject_id})_TS({seq_ts})")
-    # self.name = OIShape, 
-    # eg:   OIShape_train_CATE_knife_OBJ(s20205)_INT(use)_SUB(0010)_TS(2021-10-04-15-44-21)
 
     def __getitem__(self, idx):
         if self.transform is not None:
