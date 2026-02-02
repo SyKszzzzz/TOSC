@@ -37,7 +37,7 @@ Use the provided Blender script to render depth images from multiple viewpoints.
 ```bash
 # Syntax: blender -b -P Depth_Renderer.py [data_dir] [file_list] [output_dir] [num_scans]
 
-blender -b -P Depth_Renderer.py [path_of_OakInk] OakInkObjects.txt ./dump 10
+blender -b -P Depth_Renderer.py [path_of_OakInk] [OakInkObjects.txt/OakInkVirtualObjects.txt] ./dump 10
 ```
 
 Note: Intermediate files will be saved in OpenEXR format (*.exr). You can modify the camera intrinsics in Depth_Renderer.py, which are automatically saved to intrinsics.txt.
